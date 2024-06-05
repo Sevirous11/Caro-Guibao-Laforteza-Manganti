@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Search App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header>
+        <header>
+            <nav>
+                <div class="logo">MovieHub</div> 
+                <ul>
+                    <li><a href="#" id="homeLink">Home</a></li>
+                    <li><a href="#" id="moviesLink">Movies</a></li> 
+                    <li><a href="#">Genres</a></li>
+                </ul>
+            </nav>
+        </header>
+
+    </header>
+    <div class="container">
+        <h1>Movie Search</h1>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Enter movie name...">
+            <button id="searchButton">Search</button>
+        </div>
+        <div id="movies" class="movies-container"></div>
+        <div class="pagination">
+            <button id="prevButton" enable>Previous</button>
+            <button id="nextButton" enable>Next</button>
+        </div>
+        <div class="overlay">
+            <div class="movie-details">
+                <span id="closeButton" class="close-button">&times;</span>
+                <div class="media-container">
+                    <img id="moviePoster" src="" alt="Movie Poster">
+                    <div id="trailerContainer" class="trailer-container"></div>
+                </div>
+                <div class="text-details">
+                    <h2 id="movieTitle"></h2>
+                    <p id="moviePlot"></p>
+                    <p><strong>Director:</strong> <span id="movieDirector"></span></p>
+                    <p><strong>Actors:</strong> <span id="movieActors"></span></p>
+                    <p><strong>Genre:</strong> <span id="movieGenre"></span></p>
+                    <p><strong>IMDB Rating:</strong> <span id="movieIMDBRating"></span></p>
+                    <p><strong>TMDb Rating:</strong> <span id="movieTMDbRating"></span></p>
+                    <p><strong>Overview:</strong> <span id="movieOverview"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>

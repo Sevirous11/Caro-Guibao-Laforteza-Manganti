@@ -1,0 +1,301 @@
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #1b1b1b;
+    color: #ffffff;
+    margin: 0;
+}
+
+/* Logo styles */
+.logo {
+    color: #f5c518; /* Set logo color */
+    font-size: 24px; /* Adjust font size */
+    font-weight: bold; /* Make it bold */
+}
+
+/* Navigation bar styles */
+header {
+    background-color: #333;
+    padding: 10px 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Align items vertically */
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px; /* Add spacing between navigation items */
+}
+
+nav ul li a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 18px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+nav ul li a:hover {
+    background-color: #555;
+}
+
+nav ul li:last-child {
+    margin-right: 0; /* Remove margin from the last navigation item */
+}
+
+nav ul li a.active {
+    background-color: #f5c518; /* Highlight the active link */
+    color: #000000;
+}
+
+
+.container {
+    text-align: center;
+    background: #000000;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 800px;
+    margin: 20px auto;
+    overflow-y: auto;
+    margin-top: 200px;
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #f5c518;
+}
+
+.search-box {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    animation: fadeInUp 0.5s ease;
+}
+
+input {
+    padding: 15px;
+    font-size: 18px;
+    border: 2px solid #f5c518;
+    background-color: #dadada;
+    border-radius: 5px 0 0 5px;
+    outline: none;
+    width: 60%;
+    max-width: 600px;
+    transition: border-color 0.3s;
+}
+
+input:focus {
+    border-color: #f5c518;
+}
+
+button {
+    padding: 15px 30px;
+    font-size: 18px;
+    border: none;
+    border-radius: 0 5px 5px 0;
+    background-color: #f5c518;
+    color: #000000;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #f5c518;
+}
+
+.pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.pagination button {
+    margin: 10px; /* Adjust margin to add space between buttons */
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: #f5c518;
+    color: #121212;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.pagination button:hover {
+    background-color: #e0b10d;
+}
+
+.pagination button:disabled {
+    background-color: #777777;
+    cursor: not-allowed;
+}
+
+
+.movies-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.movie {
+    background: #212121;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    margin: 10px;
+    padding: 10px;
+    width: 200px;
+    text-align: center;
+    transition: transform 0.3s;
+    cursor: pointer;
+}
+
+.movie:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+}
+
+.movie img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+.movie h2 {
+    font-size: 18px;
+    color: #f5c518;
+    margin: 10px 0 5px;
+}
+
+.movie p {
+    font-size: 14px;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.overlay.active {
+    display: flex;
+}
+
+.movie-details {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 1200px; /* Adjust as needed */
+    max-height: 700px; /* Adjust as needed */
+    overflow-y: auto;
+    position: relative;
+    text-align: left;
+    margin: 20px auto; /* Adjust margin to center vertically and horizontally */
+}
+
+/* Customize movie title */
+.movie-details h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Customize movie details */
+.movie-details p {
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+/* Close button style */
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    color: #000000;
+    font-size: 24px;
+    z-index: 1001;
+}
+
+.close-button:hover {
+    color: #f5c518;
+}
+
+.close-button:hover {
+    color: #f5c518;
+}
+
+.trailer-container {
+    margin-left: 450px;
+    margin-top: -400px;
+}
+
+.text-details {
+    margin-top: 90px;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Home link styles */
+#homeLink {
+    position: relative;
+    display: inline-block;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 18px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#homeLink:hover {
+    background-color: #555;
+    color: #ffffff; /* Change text color on hover */
+}
+
+#homeLink::before {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: #ffffff; /* Change color of underline */
+    transition: width 0.3s ease;
+}
+
+#homeLink:hover::before {
+    width: 100%; /* Expand underline on hover */
+}
+
+
