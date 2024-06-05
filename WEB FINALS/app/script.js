@@ -5,7 +5,6 @@ let currentQuery = '';
 
 const prevButton = document.getElementById('prevButton');
 const nextButton = document.getElementById('nextButton');
-const homeLink = document.getElementById('homeLink');
 
 prevButton.style.display = 'none';
 nextButton.style.display = 'none';
@@ -28,11 +27,6 @@ prevButton.addEventListener('click', () => {
 nextButton.addEventListener('click', () => {
     currentPage++;
     fetchMovies(currentQuery, currentPage);
-});
-
-homeLink.addEventListener('click', () => {
-    // Add your desired functionality here
-    alert("Welcome to MovieHub!"); // Example: Show a welcome message
 });
 
 function fetchMovies(query, page) {
@@ -70,27 +64,207 @@ function displayMovies(movies) {
 }
 
 function updatePagination(totalResults) {
-    if (totalResults > 10 * currentPage) {
+    if (totalResults > 10) {
+        prevButton.style.display = 'inline-block';
         nextButton.style.display = 'inline-block';
     } else {
+        prevButton.style.display = 'none';
         nextButton.style.display = 'none';
     }
-
-    if (currentPage > 1) {
-        prevButton.style.display = 'inline-block';
-    } else {
-        prevButton.style.display = 'none';
-    }
 }
-
 
 function fetchMovieDetails(imdbID) {
     const omdbUrl = `https://www.omdbapi.com/?i=${imdbID}&apikey=${omdbApiKey}`;
     fetch(omdbUrl)
         .then(response => response.json())
         .then(data => {
-            displayMovieDetails(data);
-            fetchTMDbDetails(data.Title, data.Year);
+            if (data.Response === "True") {
+                displayMovieDetails(data);
+            } else {
+                alert(data.Error);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
+}
+
+function displayMovieDetails(movie) {
+    const overlay = document.querySelector('.overlay');
+    document.getElementById('moviePoster').src = movie.Poster !== "N/A" ? movie.Poster : 'https://via.placeholder.com/300';
+    document.getElementById('movieTitle').innerText = movie.Title;
+    document.getElementById('moviePlot').innerText = movie.Plot;
+    document.getElementById('movieDirector').innerText = movie.Director;
+    document.getElementById('movieActors').innerText = movie.Actors;
+    document.getElementById('movieGenre').innerText = movie.Genre;
+    document.getElementById('movieIMDBRating').innerText = movie.imdbRating;
+    document.getElementById('movieOverview').innerText = movie.Plot;
+
+    const tmdbUrl = `https://api.themoviedb.org/3/find/${movie.imdbID}?api_key=${tmdbApiKey}&external_source=imdb_id`;
+    fetch(tmdbUrl)
+        .then(response => response.json())
+        .then(data => {
+            if (data.movie_results.length > 0) {
+                const tmdbMovie = data.movie_results[0];
+                document.getElementById('movieTMDbRating').innerText = tmdbMovie.vote_average;
+            }
+            else {
+                document.getElementById('movieTMDbRating').innerText = 'N/A';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching TMDb rating:', error);
+        });
+
+    overlay.style.display = 'flex';
+}
+
+document.getElementById('closeButton').addEventListener('click', () => {
+    document.querySelector('.overlay').style.display = 'none';
+});
+
+
+const homeLink = document.getElementById('homeLink');
+homeLink.addEventListener('click', () => {
+    window.location.reload();
+});
+
+
+const moviesLink = document.getElementById('moviesLink');
+moviesLink.addEventListener('click', () => {
+    fetchRandomMovies();
+});
+
+function fetchRandomMovies() {
+    const tmdbUrl = `https://api.themoviedb.org/3/movie/now_playing?api_key=${tmdbApiKey}&language=en-US&page=1`;
+
+    fetch(tmdbUrl)
+        .then(response => response.json())
+        .then(data => {
+            if (data.results && data.results.length > 0) {
+                const randomMovies = getRandomMovies(data.results, 3);
+                displayRandomMovies(randomMovies);
+            } else {
+                console.error('No latest movies found.');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching latest movies:', error);
+        });
+}
+
+function getRandomMovies(movies, count) {
+    const shuffled = movies.sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+}
+
+function displayRandomMovies(movies) {
+    const randomMovieSection = document.getElementById('randomMovieSection');
+    const randomMoviesContainer = document.getElementById('randomMovies');
+
+    randomMoviesContainer.innerHTML = '';
+
+    movies.forEach(movie => {
+        const movieElement = document.createElement('div');
+        movieElement.classList.add('movie');
+        movieElement.innerHTML = `
+            <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
+            <h3>${movie.title}</h3>
+            <p>${movie.release_date}</p>
+        `;
+        randomMoviesContainer.appendChild(movieElement);
+    });
+
+    randomMovieSection.style.display = 'block';
+}
+
+const genresLink = document.getElementById('genresLink');
+
+genresLink.addEventListener('click', () => {
+    fetchGenres(); 
+    
+});
+
+function fetchGenres() {
+    const tmdbUrl = `https://api.themoviedb.org/3/genre/movie/list?api_key=${tmdbApiKey}&language=en-US`;
+
+    fetch(tmdbUrl)
+        .then(response => response.json())
+        .then(data => {
+            if (data.genres && data.genres.length > 0) {
+                displayGenres(data.genres);
+            } else {
+                console.error('No genres found.');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching genres:', error);
+        });
+}
+
+function displayGenres(genres) {
+    const genreSection = document.getElementById('genreSection');
+    const genresContainer = document.getElementById('genres');
+
+    genresContainer.innerHTML = '';
+
+    genres.forEach(genre => {
+        const genreButton = document.createElement('button');
+        genreButton.textContent = genre.name;
+        genreButton.addEventListener('click', () => {
+            fetchMoviesByGenre(genre.id);
+        });
+        genresContainer.appendChild(genreButton);
+    });
+
+    genreSection.style.display = 'block';
+}
+
+function fetchMoviesByGenre(genreId) {
+    const tmdbUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${tmdbApiKey}&with_genres=${genreId}`;
+
+    fetch(tmdbUrl)
+        .then(response => response.json())
+        .then(data => {
+            if (data.results && data.results.length > 0) {
+                displayMoviesByGenre(data.results);
+            } else {
+                console.error('No movies found for this genre.');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching movies by genre:', error);
+        });
+}
+
+function displayMoviesByGenre(movies) {
+    const genreMoviesContainer = document.getElementById('genreMovies');
+
+    genreMoviesContainer.innerHTML = '';
+
+    movies.forEach(movie => {
+        const movieElement = document.createElement('div');
+        movieElement.classList.add('movie');
+        movieElement.innerHTML = `
+            <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
+            <h3>${movie.title}</h3>
+            <p>${movie.release_date}</p>
+        `;
+        genreMoviesContainer.appendChild(movieElement);
+    });
+}
+
+function fetchMovieDetails(imdbID) {
+    const omdbUrl = `https://www.omdbapi.com/?i=${imdbID}&apikey=${omdbApiKey}`;
+    fetch(omdbUrl)
+        .then(response => response.json())
+        .then(data => {
+            if (data.Response === "True") {
+                fetchTMDbDetails(data.Title, data.Year);
+                displayMovieDetails(data);
+            } else {
+                alert(data.Error);
+            }
         })
         .catch(error => {
             console.error('Error fetching movie details:', error);
@@ -105,6 +279,7 @@ function displayMovieDetails(movie) {
     document.getElementById('movieActors').textContent = movie.Actors;
     document.getElementById('movieGenre').textContent = movie.Genre;
     document.getElementById('movieIMDBRating').textContent = movie.imdbRating;
+    document.getElementById('movieOverview').textContent = movie.Plot;
 
     document.getElementById('trailerContainer').innerHTML = '';
 
@@ -112,25 +287,6 @@ function displayMovieDetails(movie) {
 
     document.getElementById('closeButton').addEventListener('click', () => {
         document.querySelector('.overlay').classList.remove('active');
-        document.querySelector('.movie-details').innerHTML = `
-            <span id="closeButton" class="close-button">&times;</span>
-            <div class="details-container">
-                <div class="poster-container">
-                    <img id="moviePoster" src="" alt="Movie Poster">
-                    <div id="trailerContainer" class="trailer-container"></div>
-                </div>
-                <div class="text-details">
-                    <h2 id="movieTitle"></h2>
-                    <p id="moviePlot"></p>
-                    <p><strong>Director:</strong> <span id="movieDirector"></span></p>
-                    <p><strong>Actors:</strong> <span id="movieActors"></span></p>
-                    <p><strong>Genre:</strong> <span id="movieGenre"></span></p>
-                    <p><strong>IMDB Rating:</strong> <span id="movieIMDBRating"></span></p>
-                    <p><strong>TMDb Rating:</strong> <span id="movieTMDbRating"></span></p>
-                    <p><strong>Overview:</strong> <span id="movieOverview"></span></p>
-                </div>
-            </div>
-        `;
     });
 }
 
